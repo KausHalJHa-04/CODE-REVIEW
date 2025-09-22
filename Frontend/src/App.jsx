@@ -22,8 +22,19 @@ const [ review, setReview ] = useState("")
   }, [])
 
   async function reviewCode(){
-    const response = await axios.post('http://localhost:3000/ai/get-review' , { code })
-    setReview(response.data)
+    try {
+      // TODO: Add a loading state here to give user feedback
+      const response = await axios.post('http://localhost:3000/ai/get-review' , { code });
+      setReview(response.data);
+    } catch (error) {
+      console.error("Error fetching AI review:", error);
+      // Provide user-friendly feedback
+      if (error.code === 'ERR_NETWORK') {
+        setReview("## 🔌 Connection Error\n\nCould not connect to the review service. Please make sure the backend server is running on `http://localhost:3000`.");
+      } else {
+        setReview("## 😟 An Unexpected Error Occurred\n\nPlease try again later.");
+      }
+    }
   }
 
 

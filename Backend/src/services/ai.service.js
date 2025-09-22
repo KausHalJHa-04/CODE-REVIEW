@@ -81,12 +81,18 @@ const model = genAI.getGenerativeModel({
 
 
 async function generateContent(prompt) {
-    const result = await model.generateContent(prompt);
-
-    console.log(result.response.text())
-
-    return result.response.text();
-
+    try {
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
+        console.log("Successfully generated content from AI.");
+        return text;
+    } catch (error) {
+        console.error("Error generating content from Google AI:", error);
+        // Depending on your API design, you might want to throw a custom error
+        // or return a specific error response to the caller.
+        throw new Error("Failed to generate content from AI service.");
+    }
 }
 
-module.exports = generateContent    
+module.exports = generateContent;
